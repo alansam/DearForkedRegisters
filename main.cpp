@@ -1,6 +1,10 @@
 #include <iostream>
 #include <iomanip>
 #include <array>
+#include <string>
+#include <exception>
+
+using namespace std::literals::string_literals;
 
 size_t constexpr LIMIT { 10 };
 
@@ -14,20 +18,18 @@ public:
   ~safearrayA0() = default;
 
   //  set value of element
-  void putel(int n, int elvalue) {
-    if (n < 0 || n >= LIMIT) {
-      std::cout << "\nindex out of bounds\n";
-      exit(1);
+  void putel(size_t n, int elvalue) {
+    if (n >= LIMIT) {
+      throw std::out_of_range("index out of bounds"s);
     }
 
     arr[n] = elvalue;
   }
 
   //  get value of element
-  int getel(int n) const {
-    if (n < 0 || n >= LIMIT) {
-      std::cout << "\nindex out of bounds\n";
-      exit(1);
+  int getel(size_t n) const {
+    if (n >= LIMIT) {
+      throw std::out_of_range("index out of bounds"s);
     }
 
     return arr[n];
@@ -47,10 +49,9 @@ public:
   ~safearrayA1() = default;
 
   //  note: return by reference
-  int & access(int n) {
-    if (n < 0 || n >= LIMIT) {
-      std::cout << "\nindex out of bounds\n";
-      exit(1);
+  int & access(size_t n) {
+    if (n >= LIMIT) {
+      throw std::out_of_range("index out of bounds"s);
     }
 
     return arr[n];
@@ -70,10 +71,9 @@ public:
   ~safearrayA2() = default;
 
   //  note: return by reference
-  int & operator[](int n) {
-    if (n < 0 || n >= LIMIT) {
-      std::cout << "\nindex out of bounds\n";
-      exit(1);
+  int & operator[](size_t n) {
+    if (n >= LIMIT) {
+      throw std::out_of_range("index out of bounds"s);
     }
 
     return arr[n];
@@ -84,20 +84,20 @@ private:
 };
 
 int mainA0(int argc, char const * argv[]) {
-  std::cout << "In function " << __func__ << "()\n";
+  std::cout << "In function "s << __func__ << "()\n"s;
 
   safearrayA0 sa1;
 
   //  insert elements
-  for (int j = 0; j < LIMIT; ++j) {
+  for (size_t j = 0; j < LIMIT; ++j) {
     sa1.putel(j, j * 10);
   }
 
   //  display elements
-  for (int j = 0; j < LIMIT; ++j) {
+  for (size_t j = 0; j < LIMIT; ++j) {
     int temp = sa1.getel(j);
-    std::cout << "Element" << std::setw(3) << j 
-              << " is " << std::setw(5) << temp
+    std::cout << "Element"s << std::setw(3) << j 
+              << " is "s << std::setw(5) << temp
               << '\n';
   }
   std::cout << std::endl;
@@ -106,22 +106,22 @@ int mainA0(int argc, char const * argv[]) {
 }
 
 int mainA1(int argc, char const * argv[]) {
-  std::cout << "In function " << __func__ << "()\n";
+  std::cout << "In function "s << __func__ << "()\n"s;
 
   safearrayA1 sa1;
 
   //  insert elements
-  for (int j = 0; j < LIMIT; ++j) {
+  for (size_t j = 0; j < LIMIT; ++j) {
     //  *left* side of equal sign
     sa1.access(j) = j * 11;
   }
 
   //  display elements
-  for (int j = 0; j < LIMIT; ++j) {
+  for (size_t j = 0; j < LIMIT; ++j) {
     //  *right* side of equal sign
     int temp = sa1.access(j);
-    std::cout << "Element" << std::setw(3) << j 
-              << " is " << std::setw(5) << temp
+    std::cout << "Element"s << std::setw(3) << j 
+              << " is "s << std::setw(5) << temp
               << '\n';
   }
   std::cout << std::endl;
@@ -130,21 +130,21 @@ int mainA1(int argc, char const * argv[]) {
 }
 
 int mainA2(int argc, char const * argv[]) {
-  std::cout << "In function " << __func__ << "()\n";
+  std::cout << "In function "s << __func__ << "()\n";
 
   safearrayA2 sa1;
 
   //  insert elements
-  for (int j = 0; j < LIMIT; ++j) {
+  for (size_t j = 0; j < LIMIT; ++j) {
     //  *left* side of equal sign
     sa1[j] = j * 12;
   }
 
   //  display elements
-  for (int j = 0; j < LIMIT; ++j) {
+  for (size_t j = 0; j < LIMIT; ++j) {
     //  *right* side of equal sign
     int temp = sa1[j];
-    std::cout << "Element" << std::setw(3) << j 
+    std::cout << "Element"s << std::setw(3) << j 
               << " is " << std::setw(5) << temp
               << '\n';
   }
@@ -154,22 +154,22 @@ int mainA2(int argc, char const * argv[]) {
 }
 
 int mainAS(int argc, char const * argv[]) {
-  std::cout << "In function " << __func__ << "()\n";
+  std::cout << "In function "s << __func__ << "()\n"s;
 
   auto sa1 = std::array<int, LIMIT> { 0, };
 
   //  insert elements
-  for (int j = 0; j < LIMIT; ++j) {
+  for (size_t j = 0; j < LIMIT; ++j) {
     //  *left* side of equal sign
     sa1[j] = j * 13;
   }
 
   //  display elements
-  for (int j = 0; j < LIMIT; ++j) {
+  for (size_t j = 0; j < LIMIT; ++j) {
     //  *right* side of equal sign
     int temp = sa1[j];
-    std::cout << "Element" << std::setw(3) << j 
-              << " is " << std::setw(5) << temp
+    std::cout << "Element"s << std::setw(3) << j 
+              << " is "s << std::setw(5) << temp
               << '\n';
   }
   std::cout << std::endl;
@@ -178,13 +178,19 @@ int mainAS(int argc, char const * argv[]) {
 }
 
 int main(int argc, char const * argv[]) {
-  std::cout << "DearForkedRegisters\n";
-  int RC { 0 };
+  std::cout << "DearForkedRegisters\n"s;
+  int RC { EXIT_SUCCESS };
 
-  if (RC == 0) { RC = mainA0(argc, argv); }
-  if (RC == 0) { RC = mainA1(argc, argv); }
-  if (RC == 0) { RC = mainA2(argc, argv); }
-  if (RC == 0) { RC = mainAS(argc, argv); }
+  try {
+    if (RC == 0) { RC = mainA0(argc, argv); }
+    if (RC == 0) { RC = mainA1(argc, argv); }
+    if (RC == 0) { RC = mainA2(argc, argv); }
+    if (RC == 0) { RC = mainAS(argc, argv); }
+  }
+  catch (std::exception & ex) {
+    std::cout << ex.what() << std::endl;
+    RC = EXIT_FAILURE;
+  }
 
   return RC;
 }
